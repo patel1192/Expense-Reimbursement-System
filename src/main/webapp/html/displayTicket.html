@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/ERS/css/EmployeeDashboard.css" >
+</head>
+<body>
+
+
+ <div id="wrapper" class="animate">
+    <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">ERS System</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+ <ul class="navbar-nav animate side-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/ERS/html/home.html" title="Home Page"><i class="fas fa-home"></i> Home Page <i class="fas fa-home shortmenu animate"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ERS/logout.change" title="Log Out"><i class="fa fa-fw fa-power-off"></i> Log Out <i class="fa fa-fw fa-power-off shortmenu animate""></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+     <div class="container-fluid">
+
+
+
+
+<table class="table" id="ticketsTable">
+  <thead>
+    <tr>
+      <th scope="col">Ticket Id</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Description</th>
+      <th scope="col">Submitted Date</th>
+      <th scope="col">Status</th>
+      <th scope="col">Resolver</th>
+      <th scope="col">Resolved Date</th>
+    </tr>
+  </thead>
+  <tbody>
+   <!-- data will be dynamacilly append  -->
+  </tbody>
+</table>
+
+ 
+<script>
+// $( window ).on( "load", getSessVill );
+
+function getSessVill() {
+	let xhttp = new XMLHttpRequest();
+	xhttp.open("GET", "http://localhost:8080/ERS/getsessionvill.json", false);
+	
+	xhttp.onreadystatechange = function() {
+		
+		if(xhttp.readyState == XMLHttpRequest.DONE && xhttp.status==200) {
+			let vill = JSON.parse(xhttp.responseText);
+			console.log(vill);
+			/* if(vill === null){
+				 alert('No session'); 
+			}else{
+				alert('session found!'); 
+			} */
+		} else {
+			alert('Please Login First');
+			window.location.href = "http://localhost:8080/ERS/html/index.html";
+
+		}
+	};
+	xhttp.send();
+}
+
+$(document).ready(function(){
+	getSessVill();
+	
+	$('#ticketsTable').dataTable( {
+		  "ajax": {
+			  
+		    "url": "/ERS/displayAllTickets.json",
+		    
+		  },
+		  "columns": [																										
+			  {"data": "id"},
+			  {"data":"reimbAmount"},
+			  {"data":"reimbDescription"},
+			  {"data":"reimbSubmitted"},
+			  {"data":"reimbStatus"},
+			  {"data":"reimbResolver.firstName"},
+			  {"data":"reimbResolved"}
+			  ]
+		} ); 
+});
+
+</script>
+</div>
+ </div>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+</body>
+</html>
+
+
+<!-- /* (function() {
+	$.getJSON( "/ERS/displayAllTickets.json", function() {
+		 
+		}).done(function(data) {
+		    console.log( data );
+		 //   JSON.parse(data);
+		   var items = [];
+			  $.each( data, function( key, val ) {
+				  console.log(val);
+				  var resolverFullName = " ";
+				  var resolved = " ";
+				  if(val['reimbStatus'] !== "Pending" ){
+					  resolverFullName = val['reimbResolver']['firstName'] +' '+ val['reimbResolver']['lastName'];
+				  }
+				  if(val['reimbStatus'] !== "Pending"){
+					  resolved = val['reimbResolved'];
+				  }
+				  var html = "<tr>"+
+				  				"<td>" + val['id'] + "</td>" + 
+				  				"<td>" + val['reimbAmount'] + "</td>" + 
+				  				"<td>" + val['reimbDescription'] + "</td>" + 
+				  				"<td>" + val['reimbSubmitted'] + "</td>" + 
+				  				"<td>" + val['reimbStatus'] + "</td>" + 
+				  				"<td>" + resolverFullName + "</td>" + 
+				  				"<td>" + resolved + "</td>" + 	
+				  			"</tr>";
+				  	
+				  				$("#ticketsTable tbody").after(html);
+				  				
+			  });
+			 
+			
+		  });
+	
+})(); */ -->

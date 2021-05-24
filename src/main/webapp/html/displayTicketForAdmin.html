@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Admin</title>
+
+<!-- CSS -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link rel="stylesheet" type="text/css" href="/ERS/css/EmployeeDashboard.css" >
+
+
+<!-- Scripts -->
+	
+
+	<!--Jquery 3.5.1  -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	
+	<!-- Bootstrap 4.1.1 -->
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+	
+	<!-- DataTables 1.10.24 -->
+	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+
+
+
+</head>
+<body>
+ <div id="wrapper" class="animate">
+    <nav class="navbar header-top fixed-top navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">ERS System</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText"
+        aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarText">
+ <ul class="navbar-nav animate side-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="/ERS/html/adminHome.html" title="Home Page"><i class="fas fa-home"></i> Home Page <i class="fas fa-home shortmenu animate"></i></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/ERS/logout.change" title="Log Out"><i class="fa fa-fw fa-power-off""></i> Log Out <i class="fa fa-fw fa-power-off shortmenu animate"></i></a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+     <div class="container-fluid">
+		<table class="table" id="ticketsTable">
+  				<thead>
+   						 <tr>
+							      <th scope="col">Ticket Id</th>
+							      <th scope="col">Amount</th>
+							      <th scope="col">Description</th>
+							      <th scope="col">Submitted Date</th>
+							      <th scope="col">Status</th>
+							      <th scope="col">Resolver</th>
+							      <th scope="col">Resolved Date</th>
+							      <th scope="col">Reimbursement Type</th>
+							       <th scope="col">Author Name</th>
+							        <th scope="col">Author email</th>
+							      <th scope="col">Action For Approve or Deny</th>
+							      
+   						 </tr>
+			  </thead>
+ 		 <tbody>
+ 	
+   <!-- data will be dynamacilly append  -->
+  </tbody>
+</table>
+
+<!-- Modal For Status Change -->
+<div id="statusModal" class="modal fade" role="modalDialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        <input type="radio" name="action" class="action" value="Approved">Approve</button>
+        <input type="radio" name="action" class="action" value="Denied">Deny</button>
+        <input type="hidden" name="id" class="ticketID">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" id="statusChangeSubmit">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+//Document Ready starts
+$(document).ready(function(){
+	//Convert Ticket Table to datatable
+	$('#ticketsTable').dataTable( {
+		  "ajax": {
+			   "url": "/ERS/displayAllForAdminTickets.json",
+		  },
+		  "columns": [																										
+			  {"data": "id"},
+			  {"data":"reimbAmount"},
+			  {"data":"reimbDescription"},
+			  {"data":"reimbSubmitted"},
+			  {"data":"reimbStatus"},
+			  {"data":"reimbResolver.firstName"},
+			  {"data":"reimbResolved"},
+			  {"data":"reimbType"},
+			  {"data":"reimbAuthor.firstName"},
+			  {"data":"reimbAuthor.email"},
+			  {name:"control",
+					searchable: false,
+					orderable: false,
+					defaultContent: "<input type=\"button\" value=\"Click here to take action\" class=\"actionBtn\">",
+					createdCell: function(cell,cellData,rowData,rowIndex,colIndex)
+					{
+						 $(cell).on("click","input",rowData,on_GridActionButton_Click);
+					} 
+			   }
+		  ]
+		} ); //dtatable end
+});//document ready end
+
+//Handle "Action" button click from DataTable
+function on_GridActionButton_Click(event){
+	var status = event.data.reimbStatus;
+	var id = event.data.id;
+	if(event.data.reimbStatus == "Approved"){
+		alert("No action required for Ticket"+ id);
+	}else if(event.data.reimbStatus == "Denied"){
+		alert("No action required for Ticket"+ id);
+	}else if(event.data.reimbStatus == "Pending"){
+		 $("#statusModal").modal('show');
+		 $('#statusModal .ticketID').val(id);
+		 $('.modal-title').html('Ticket ID: '+ id);
+	}
+}// end on_GridActionButton_Click
+
+//Handle Status Change Modal Save
+$('#statusChangeSubmit').on('click', function(e) {
+    e.preventDefault();
+   var id = $("#statusModal .ticketID").val();
+   var newStatus = $("input[name='action']:checked").val();
+  
+   $.ajax({
+		  type: "POST",
+		  url: "/ERS/changeStatus.json",
+		  data: {id: id,action :newStatus},
+		 success: function (data) {  
+			 
+			 alert('Scucessfully Changed status for Ticket' + id);
+			 location.reload();
+		    },
+		}); 
+    return false;
+});// end of Status Change Modal Save
+
+
+</script>
+</div>
+ </div>
+  <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
+
+
+</body>
+</html>
