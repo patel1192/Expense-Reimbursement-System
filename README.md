@@ -7,16 +7,16 @@ The Expense Reimbursement System (ERS) will manage the process of reimbursing em
 
 ## Technologies Used
 
-JavaScript
-HTML
-CSS
-AJAX
-SQL
-PostgreSQL
-Hibernate
-Java
-Junit
-Mockito
+* JavaScript
+* HTML
+* CSS
+* AJAX
+* SQL
+* PostgreSQL
+* Hibernate
+* Java
+* Junit
+* Mockito
 
 ## Features
 
