@@ -21,13 +21,15 @@ Mockito
 ## Features
 
 List of features ready and TODOs for future development
-* Create Reimbursement by employees
-* Approve and Deny reimbursement by manager
-* filter by status and employee name
+* Users can submit reimbursement requests.
+* Users can view the status of previously submitted requests.
+* Administrators can view all past requests from all users.
+* Administrators can approve or deny pending requests.
+* Administrators can search by status and employees name.
 
 To-do list:
-* Employee can update and delete reimbursement.
-* Users can get email after registation
+* Users can upload an image of their receipt when submitting reimbursement requests.
+* Users can get email of thier status that it's Approve or Deny.
 
 ## Getting Started
    
