@@ -22,6 +22,8 @@ To-do list:
 
 ## Getting Started
    
-git clone "URL"
+git clone https://github.com/patel1192/Expense-Reimbursement-System.git
+
+
 
 
