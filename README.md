@@ -12,13 +12,13 @@ JavaScript, HTML, CSS, AJAX, SQL, PostgreSQL, Hibernate, Java,Junit,Mockito
 ## Features
 
 List of features ready and TODOs for future development
-* feature 1 Create Reimbursement by employees
-* feature 2 Approve and Deny reimbursement by manager
-* feature 3 filter by status and employee name
+* Create Reimbursement by employees
+* Approve and Deny reimbursement by manager
+* filter by status and employee name
 
 To-do list:
-* Will perform CURD operation
-* will send email when user registation
+* Employee can update and delete reimbursement.
+* Users can get email after registation
 
 ## Getting Started
    
